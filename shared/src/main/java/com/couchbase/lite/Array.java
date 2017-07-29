@@ -64,12 +64,14 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public Array set(List<Object> list) {
-        List<Object> result = new ArrayList<>();
-        for (Object value : list) {
-            result.add(CBLData.convert(value));
+        synchronized (lock) {
+            List<Object> result = new ArrayList<>();
+            for (Object value : list) {
+                result.add(CBLData.convert(value));
+            }
+            this.list = result;
+            return this;
         }
-        this.list = result;
-        return this;
     }
 
     /**
@@ -81,12 +83,14 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public Array setObject(int index, Object value) {
-        Object oldValue = getObject(index);
-        if ((value != null && !value.equals(oldValue)) || value == null) {
-            value = CBLData.convert(value);
-            set(index, value, true);
+        synchronized (lock) {
+            Object oldValue = getObject(index);
+            if ((value != null && !value.equals(oldValue)) || value == null) {
+                value = CBLData.convert(value);
+                set(index, value, true);
+            }
+            return this;
         }
-        return this;
     }
 
     @Override
@@ -152,12 +156,14 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public Array addObject(Object value) {
-        if (list == null)
-            copyFleeceData();
+        synchronized (lock) {
+            if (list == null)
+                copyFleeceData();
 
-        list.add(CBLData.convert(value));
-        setChanged();
-        return this;
+            list.add(CBLData.convert(value));
+            setChanged();
+            return this;
+        }
     }
 
     @Override
@@ -224,12 +230,14 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public Array insertObject(int index, Object value) {
-        if (list == null)
-            copyFleeceData();
+        synchronized (lock) {
+            if (list == null)
+                copyFleeceData();
 
-        list.add(index, CBLData.convert(value));
-        setChanged();
-        return this;
+            list.add(index, CBLData.convert(value));
+            setChanged();
+            return this;
+        }
     }
 
     @Override
@@ -295,12 +303,14 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public Array remove(int index) {
-        if (list == null)
-            copyFleeceData();
+        synchronized (lock) {
+            if (list == null)
+                copyFleeceData();
 
-        list.remove(index);
-        setChanged();
-        return this;
+            list.remove(index);
+            setChanged();
+            return this;
+        }
     }
 
     /**
@@ -338,7 +348,9 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public int count() {
-        return list == null ? super.count() : list.size();
+        synchronized (lock) {
+            return list == null ? super.count() : list.size();
+        }
     }
 
     /**
@@ -351,14 +363,16 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public Object getObject(int index) {
-        if (list == null) {
-            Object value = super.getObject(index);
-            if (value instanceof ReadOnlyArray || value instanceof ReadOnlyDictionary)
-                copyFleeceData();
-            else
-                return value;
+        synchronized (lock) {
+            if (list == null) {
+                Object value = super.getObject(index);
+                if (value instanceof ReadOnlyArray || value instanceof ReadOnlyDictionary)
+                    copyFleeceData();
+                else
+                    return value;
+            }
+            return list.get(index);
         }
-        return list.get(index);
     }
 
     /**
@@ -491,20 +505,22 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
      */
     @Override
     public List<Object> toList() {
-        if (list == null)
-            copyFleeceData();
+        synchronized (lock) {
+            if (list == null)
+                copyFleeceData();
 
-        List<Object> array = new ArrayList<>();
-        if (list != null) {
-            for (Object value : list) {
-                if (value instanceof ReadOnlyDictionary)
-                    value = ((ReadOnlyDictionary) value).toMap();
-                else if (value instanceof ReadOnlyArray)
-                    value = ((ReadOnlyArray) value).toList();
-                array.add(value);
+            List<Object> array = new ArrayList<>();
+            if (list != null) {
+                for (Object value : list) {
+                    if (value instanceof ReadOnlyDictionary)
+                        value = ((ReadOnlyDictionary) value).toMap();
+                    else if (value instanceof ReadOnlyArray)
+                        value = ((ReadOnlyArray) value).toList();
+                    array.add(value);
+                }
             }
+            return array;
         }
-        return array;
     }
 
     //---------------------------------------------
@@ -545,6 +561,7 @@ public class Array extends ReadOnlyArray implements ArrayInterface, FleeceEncoda
     // Package level access
     //---------------------------------------------
 
+    // TODO: Should hide fleeceEncode() method
     // FleeceEncodable implementation
     @Override
     public void fleeceEncode(FLEncoder encoder, Database database) {

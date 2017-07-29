@@ -28,6 +28,8 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
     private SharedKeys sharedKeys;
     private List<String> keys = null; // dictionary key cache
 
+    Object lock = new Object();  // lock for thread-safety
+
     //-------------------------------------------------------------------------
     // Constructors
     //-------------------------------------------------------------------------
@@ -69,7 +71,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public Object getObject(String key) {
-        return fleeceValueToObject(key);
+        synchronized (lock) {
+            return fleeceValueToObject(key);
+        }
     }
 
     /**
@@ -80,7 +84,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public String getString(String key) {
-        return (String) fleeceValueToObject(key);
+        synchronized (lock) {
+            return (String) fleeceValueToObject(key);
+        }
     }
 
     /**
@@ -91,7 +97,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public Number getNumber(String key) {
-        return (Number) fleeceValueToObject(key);
+        synchronized (lock) {
+            return (Number) fleeceValueToObject(key);
+        }
     }
 
     /**
@@ -104,8 +112,10 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public int getInt(String key) {
-        FLValue value = fleeceValue(key);
-        return value != null ? (int) value.asInt() : 0;
+        synchronized (lock) {
+            FLValue value = fleeceValue(key);
+            return value != null ? (int) value.asInt() : 0;
+        }
     }
 
     /**
@@ -118,9 +128,10 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public long getLong(String key) {
-        // TODO asLong()?
-        FLValue value = fleeceValue(key);
-        return value != null ? value.asInt() : 0;
+        synchronized (lock) {
+            FLValue value = fleeceValue(key);
+            return value != null ? value.asInt() : 0;
+        }
     }
 
     /**
@@ -133,8 +144,10 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public float getFloat(String key) {
-        FLValue value = fleeceValue(key);
-        return value != null ? value.asFloat() : 0.0f;
+        synchronized (lock) {
+            FLValue value = fleeceValue(key);
+            return value != null ? value.asFloat() : 0.0f;
+        }
     }
 
     /**
@@ -147,8 +160,10 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public double getDouble(String key) {
-        FLValue value = fleeceValue(key);
-        return value != null ? value.asDouble() : 0.0;
+        synchronized (lock) {
+            FLValue value = fleeceValue(key);
+            return value != null ? value.asDouble() : 0.0;
+        }
     }
 
     /**
@@ -160,8 +175,10 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public boolean getBoolean(String key) {
-        FLValue value = fleeceValue(key);
-        return value != null ? value.asBool() : false;
+        synchronized (lock) {
+            FLValue value = fleeceValue(key);
+            return value != null ? value.asBool() : false;
+        }
     }
 
     /**
@@ -173,7 +190,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public Blob getBlob(String key) {
-        return (Blob) fleeceValueToObject(key);
+        synchronized (lock) {
+            return (Blob) fleeceValueToObject(key);
+        }
     }
 
     /**
@@ -189,7 +208,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public Date getDate(String key) {
-        return DateUtils.fromJson(getString(key));
+        synchronized (lock) {
+            return DateUtils.fromJson(getString(key));
+        }
     }
 
     /**
@@ -201,7 +222,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public ReadOnlyArray getArray(String key) {
-        return (ReadOnlyArray) fleeceValueToObject(key);
+        synchronized (lock) {
+            return (ReadOnlyArray) fleeceValueToObject(key);
+        }
     }
 
     /**
@@ -213,7 +236,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public ReadOnlyDictionary getDictionary(String key) {
-        return (ReadOnlyDictionary) fleeceValueToObject(key);
+        synchronized (lock) {
+            return (ReadOnlyDictionary) fleeceValueToObject(key);
+        }
     }
 
     /**
@@ -224,11 +249,12 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public Map<String, Object> toMap() {
-        if (flDict != null)
-            // TODO: Need to review!
-            return flDictToMap(flDict);
-        else
-            return new HashMap<>();
+        synchronized (lock) {
+            if (flDict != null)
+                return flDictToMap(flDict);
+            else
+                return new HashMap<>();
+        }
     }
 
     /**
@@ -240,8 +266,9 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
      */
     @Override
     public boolean contains(String key) {
-        // TODO: Need to review!
-        return fleeceValue(key) != null;
+        synchronized (lock) {
+            return fleeceValue(key) != null;
+        }
     }
 
     //---------------------------------------------
@@ -262,7 +289,6 @@ public class ReadOnlyDictionary implements ReadOnlyDictionaryInterface, FleeceEn
                 this.sharedKeys = data.getDatabase().getSharedKeys();
         }
     }
-
 
     //---------------------------------------------
     // Package level access

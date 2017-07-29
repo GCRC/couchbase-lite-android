@@ -22,6 +22,8 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
     private FLArray flArray;
     private SharedKeys sharedKeys;
 
+    Object lock = new Object();  // lock for thread-safety
+
     //---------------------------------------------
     // Constructors
     //---------------------------------------------
@@ -41,7 +43,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public int count() {
-        return flArray != null ? (int) flArray.count() : 0;
+        synchronized (lock) {
+            return flArray != null ? (int) flArray.count() : 0;
+        }
     }
 
     /**
@@ -54,7 +58,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public Object getObject(int index) {
-        return fleeceValueToObject(index);
+        synchronized (lock) {
+            return fleeceValueToObject(index);
+        }
     }
 
     /**
@@ -65,7 +71,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public String getString(int index) {
-        return (String) fleeceValueToObject(index);
+        synchronized (lock) {
+            return (String) fleeceValueToObject(index);
+        }
     }
 
     /**
@@ -76,7 +84,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public Number getNumber(int index) {
-        return (Number) fleeceValueToObject(index);
+        synchronized (lock) {
+            return (Number) fleeceValueToObject(index);
+        }
     }
 
     /**
@@ -89,7 +99,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public int getInt(int index) {
-        return (int) fleeceValue(index).asInt();
+        synchronized (lock) {
+            return (int) fleeceValue(index).asInt();
+        }
     }
 
     /**
@@ -102,8 +114,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public long getLong(int index) {
-        // asLong
-        return fleeceValue(index).asInt();
+        synchronized (lock) {
+            return fleeceValue(index).asInt();
+        }
     }
 
     /**
@@ -116,7 +129,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public float getFloat(int index) {
-        return fleeceValue(index).asFloat();
+        synchronized (lock) {
+            return fleeceValue(index).asFloat();
+        }
     }
 
     /**
@@ -129,7 +144,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public double getDouble(int index) {
-        return fleeceValue(index).asDouble();
+        synchronized (lock) {
+            return fleeceValue(index).asDouble();
+        }
     }
 
     /**
@@ -140,7 +157,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public boolean getBoolean(int index) {
-        return fleeceValue(index).asBool();
+        synchronized (lock) {
+            return fleeceValue(index).asBool();
+        }
     }
 
     /**
@@ -152,7 +171,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public Blob getBlob(int index) {
-        return (Blob) fleeceValueToObject(index);
+        synchronized (lock) {
+            return (Blob) fleeceValueToObject(index);
+        }
     }
 
     /**
@@ -168,7 +189,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public Date getDate(int index) {
-        return DateUtils.fromJson(getString(index));
+        synchronized (lock) {
+            return DateUtils.fromJson(getString(index));
+        }
     }
 
     /**
@@ -179,7 +202,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public ReadOnlyArray getArray(int index) {
-        return (ReadOnlyArray) fleeceValueToObject(index);
+        synchronized (lock) {
+            return (ReadOnlyArray) fleeceValueToObject(index);
+        }
     }
 
     /**
@@ -190,7 +215,9 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public ReadOnlyDictionary getDictionary(int index) {
-        return (ReadOnlyDictionary) fleeceValueToObject(index);
+        synchronized (lock) {
+            return (ReadOnlyDictionary) fleeceValueToObject(index);
+        }
     }
 
     /**
@@ -201,7 +228,6 @@ public class ReadOnlyArray implements ReadOnlyArrayInterface, FleeceEncodable, I
      */
     @Override
     public List<Object> toList() {
-        //TODO
         throw new UnsupportedOperationException("Work in Progress");
     }
 

@@ -123,8 +123,10 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Document set(Map<String, Object> dictionary) {
-        this.dictionary.set(dictionary);
-        return this;
+        synchronized (lock) {
+            this.dictionary.set(dictionary);
+            return this;
+        }
     }
 
     /**
@@ -138,63 +140,87 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Document setObject(String key, Object value) {
-        dictionary.setObject(key, value);
-        return this;
+        synchronized (lock) {
+            dictionary.setObject(key, value);
+            return this;
+        }
     }
 
     @Override
     public Document setString(String key, String value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setNumber(String key, Number value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setInt(String key, int value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setLong(String key, long value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setFloat(String key, float value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setDouble(String key, double value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setBoolean(String key, boolean value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setBlob(String key, Blob value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setDate(String key, Date value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setArray(String key, Array value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     @Override
     public Document setDictionary(String key, Dictionary value) {
-        return setObject(key, value);
+        synchronized (lock) {
+            return setObject(key, value);
+        }
     }
 
     /**
@@ -205,8 +231,10 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Document remove(String key) {
-        dictionary.remove(key);
-        return this;
+        synchronized (lock) {
+            dictionary.remove(key);
+            return this;
+        }
     }
 
     /**
@@ -218,7 +246,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Array getArray(String key) {
-        return dictionary.getArray(key);
+        synchronized (lock) {
+            return dictionary.getArray(key);
+        }
     }
 
     /**
@@ -230,7 +260,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Dictionary getDictionary(String key) {
-        return dictionary.getDictionary(key);
+        synchronized (lock) {
+            return dictionary.getDictionary(key);
+        }
     }
 
     //---------------------------------------------
@@ -244,12 +276,16 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public int count() {
-        return dictionary.count();
+        synchronized (lock) {
+            return dictionary.count();
+        }
     }
 
     @Override
     public List<String> getKeys() {
-        return dictionary.getKeys();
+        synchronized (lock) {
+            return dictionary.getKeys();
+        }
     }
 
     /**
@@ -262,7 +298,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Object getObject(String key) {
-        return dictionary.getObject(key);
+        synchronized (lock) {
+            return dictionary.getObject(key);
+        }
     }
 
     /**
@@ -274,7 +312,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public String getString(String key) {
-        return dictionary.getString(key);
+        synchronized (lock) {
+            return dictionary.getString(key);
+        }
     }
 
     /**
@@ -286,7 +326,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Number getNumber(String key) {
-        return dictionary.getNumber(key);
+        synchronized (lock) {
+            return dictionary.getNumber(key);
+        }
     }
 
     /**
@@ -299,7 +341,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public int getInt(String key) {
-        return dictionary.getInt(key);
+        synchronized (lock) {
+            return dictionary.getInt(key);
+        }
     }
 
     /**
@@ -312,7 +356,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public long getLong(String key) {
-        return dictionary.getLong(key);
+        synchronized (lock) {
+            return dictionary.getLong(key);
+        }
     }
 
     /**
@@ -325,7 +371,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public float getFloat(String key) {
-        return dictionary.getFloat(key);
+        synchronized (lock) {
+            return dictionary.getFloat(key);
+        }
     }
 
     /**
@@ -338,7 +386,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public double getDouble(String key) {
-        return dictionary.getDouble(key);
+        synchronized (lock) {
+            return dictionary.getDouble(key);
+        }
     }
 
     /**
@@ -350,7 +400,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public boolean getBoolean(String key) {
-        return dictionary.getBoolean(key);
+        synchronized (lock) {
+            return dictionary.getBoolean(key);
+        }
     }
 
     /**
@@ -362,7 +414,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Blob getBlob(String key) {
-        return dictionary.getBlob(key);
+        synchronized (lock) {
+            return dictionary.getBlob(key);
+        }
     }
 
     /**
@@ -378,7 +432,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Date getDate(String key) {
-        return dictionary.getDate(key);
+        synchronized (lock) {
+            return dictionary.getDate(key);
+        }
     }
 
     /**
@@ -389,7 +445,9 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public Map<String, Object> toMap() {
-        return dictionary.toMap();
+        synchronized (lock) {
+            return dictionary.toMap();
+        }
     }
 
     /**
@@ -402,23 +460,27 @@ public final class Document extends ReadOnlyDocument implements DictionaryInterf
      */
     @Override
     public boolean contains(String key) {
-        return dictionary.contains(key);
+        synchronized (lock) {
+            return dictionary.contains(key);
+        }
     }
 
     //---------------------------------------------
     // Protected level access
     //---------------------------------------------
-    // Sets c4doc and updates my root dictionary
-    @Override
-    protected void setC4Doc(CBLC4Doc c4doc) {
-        super.setC4Doc(c4doc);
-        // Update delegate dictionary:
-        this.dictionary = new Dictionary(getData());
-    }
+
 
     //---------------------------------------------
     // Package level access
     //---------------------------------------------
+
+    // Sets c4doc and updates my root dictionary
+    @Override
+    void setC4Doc(CBLC4Doc c4doc) {
+        super.setC4Doc(c4doc);
+        // Update delegate dictionary:
+        this.dictionary = new Dictionary(getData());
+    }
 
     void save() throws CouchbaseLiteException {
         save(effectiveConflictResolver(), false);

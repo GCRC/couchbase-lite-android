@@ -92,11 +92,11 @@ public class ReadOnlyDocument extends ReadOnlyDictionary {
     }
 
     //---------------------------------------------
-    // protected level access
+    // Package level access
     //---------------------------------------------
 
     // Sets c4doc and updates my root dictionary
-    protected void setC4Doc(CBLC4Doc c4doc) {
+    void setC4Doc(CBLC4Doc c4doc) {
         this.c4doc = c4doc;
         if (c4doc != null) {
             FLDict root = null;
@@ -110,10 +110,6 @@ public class ReadOnlyDocument extends ReadOnlyDictionary {
             setData(null);
         }
     }
-
-    //---------------------------------------------
-    // Package level access
-    //---------------------------------------------
 
     Database getDatabase() {
         return database;
