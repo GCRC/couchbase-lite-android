@@ -30,9 +30,13 @@ public class BaseReplicatorTest extends BaseTest {
     long timeout;  // seconds
     ExecutorService executor = null;
 
-    protected URLEndpoint getRemoteEndpoint(String dbName, boolean secure) throws URISyntaxException {
+    protected URI getRemoteURI(String dbName, boolean secure) throws URISyntaxException {
         String uri = (secure ? "wss://" : "ws://") + config.remoteHost() + ":" + config.remotePort() + "/" + dbName;
-        return new URLEndpoint(new URI(uri));
+        return new URI(uri);
+    }
+
+    protected URLEndpoint getRemoteEndpoint(String dbName, boolean secure) throws URISyntaxException {
+        return new URLEndpoint(getRemoteURI(dbName, secure));
     }
 
     protected ReplicatorConfiguration makeConfig(boolean push, boolean pull, boolean continuous) {
