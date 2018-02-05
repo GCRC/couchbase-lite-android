@@ -38,6 +38,7 @@ import okhttp3.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -374,5 +375,19 @@ public class ReplicatorWithSyncGatewayDBTest extends BaseReplicatorTest {
         doc = otherDB.getDocument(docID);
         assertNotNull(doc);
         assertEquals("world", doc.getString("hello"));
+    }
+
+    @Test
+    public void testDocIDFilter() throws URISyntaxException, InterruptedException {
+        Endpoint target = getRemoteEndpoint(DB_NAME, false);
+        ReplicatorConfiguration config = new ReplicatorConfiguration(db, target)
+                .setContinuous(false)
+                .setReplicatorType(ReplicatorConfiguration.ReplicatorType.PULL)
+                //.setAuthenticator(new BasicAuthenticator("jflath", "password"))
+                .setDocumentIDs(Arrays.asList("doc_A"));
+        Replicator repl = new Replicator(config);
+        run(repl, 0, null);
+        assertNotNull(db.getDocument("doc_A"));
+        assertNull(db.getDocument("doc_B"));
     }
 }
